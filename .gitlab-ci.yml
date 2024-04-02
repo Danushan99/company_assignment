@@ -1,0 +1,25 @@
+stages: 
+  - dev
+  - prod
+
+dev-deploy:
+  stage: dev
+  before_script:
+    - docker-compose -f docker-compose-deploy-dev.yml build
+    - docker-compose -f docker-compose-deploy-dev.yml down
+  script:
+    - docker-compose -f docker-compose-deploy-dev.yml up -d
+  tags:
+   - "dev"
+  when: manual
+
+prod-deploy:
+  stage: prod
+  before_script:
+    - docker-compose -f docker-compose-deploy-prod.yml build
+    - docker-compose -f docker-compose-deploy-prod.yml down
+  script:
+    - docker-compose -f docker-compose-deploy-prod.yml up -d
+  tags:
+   - "prod"
+  when: manual
