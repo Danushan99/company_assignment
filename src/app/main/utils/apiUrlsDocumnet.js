@@ -48,11 +48,16 @@ export const commonSectionUrl = {
 	servicesUrl: 'mod/common/allservices',
 	allLocationsUrl: 'mod/common/allLocations'
 };
+export const journalSectionURL = {
+	addNewEntry: '/mod/fin/je'
+}
+
 export default {
 	commonUrl,
 	userSectionUrl,
 	librarySectionUrl,
 	commonSectionUrl,
 	loardMenuSecionurl,
-	test2024SectionUrl
+	test2024SectionUrl,
+	journalSectionURL
 };

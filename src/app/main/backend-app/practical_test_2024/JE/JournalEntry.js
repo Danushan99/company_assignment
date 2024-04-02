@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import './JournalEntry.css';
+import axios from 'axios';
+import { journalSectionURL } from 'app/main/utils/apiUrlsDocumnet';
+import { toast } from 'react-toastify';
+
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const JournalEntry = () => {
 	const [year, setYear] = useState('');
@@ -11,10 +16,9 @@ const JournalEntry = () => {
 	const [dueDate, setDueDate] = useState('');
 	const [invoiceNumber, setInvoiceNumber] = useState('');
 	const [agreementNo, setAgreementNo] = useState('');
-
-	const [accountId, setAccountId] = useState('');
-	const [contentId, setContentId] = useState('');
-	const [inquireId, setInquireId] = useState('');
+	const [accountId, setAccountId] = useState(0);
+	const [contentId, setContentId] = useState(0);
+	const [inquireId, setInquireId] = useState(0);
 	const [debit, setDebit] = useState('');
 	const [credit, setCredit] = useState('');
 
@@ -36,13 +40,65 @@ const JournalEntry = () => {
 			debit,
 			credit
 		});
+
+		try {
+			const body = {
+				year: parseInt(year),
+				entyDate: entryDate,
+				ipdate: '10/12/2024',
+				dueDate: dueDate,
+				comments: comment,
+				office: 100,
+				invNo: '001',
+				invPdf: "PDF Path",
+				argNo: '002',
+				ccy: '003',
+				totalDbtAmount: 1000,
+				totalCdtAmount: 2000,
+				dbtAmounts: [
+					{
+						key: '1',
+						accountID: parseInt(accountId),
+						contactID: parseInt(contentId),
+						inqId: parseInt(inquireId),
+						comment: comment,
+						amount: 1000
+					}
+				],
+				cdtAmounts: [
+					{
+						key: '1',
+						accountID: parseInt(accountId),
+						contactID: parseInt(contentId),
+						inqId: parseInt(inquireId),
+						comment: comment,
+						amount: 1000
+					}
+				]
+			};
+
+			const res = axios.post(`${apiUrl}${journalSectionURL.addNewEntry}`, { body });
+
+			if (res?.status === 200) {
+				console.log('res : ', res);
+				return res;
+			} else {
+				console.log(res);
+			}
+		} catch (error) {
+			toast.error(error?.message, {
+				position: toast.POSITION.TOP_CENTER,
+				// autoClose: 400
+			});
+			return error.message;
+		}
 	};
 
 	return (
 		<div>
 			<div className="journal-entry-container">
 				<h3>Journal Entry</h3>
-				<form onSubmit={handleSubmit} className="form">
+				<div className="form">
 					<div className="form-column">
 						<div className="form-group">
 							<label htmlFor="year">Year:</label>
@@ -140,12 +196,12 @@ const JournalEntry = () => {
 							/>
 						</div>
 					</div>
-				</form>
+				</div>
 			</div>
 
 			<div className="journal-entry-container">
 				<h3>Add New Set of Journal Entries</h3>
-				<form onSubmit={handleSubmit} className="form">
+				<div className="form">
 					<table className="journal-table">
 						<thead>
 							<tr>
@@ -161,7 +217,7 @@ const JournalEntry = () => {
 							<tr>
 								<td>
 									<input
-										type="text"
+										type="number"
 										value={accountId}
 										onChange={e => setAccountId(e.target.value)}
 										className="form-control"
@@ -169,7 +225,7 @@ const JournalEntry = () => {
 								</td>
 								<td>
 									<input
-										type="text"
+										type="number"
 										value={contentId}
 										onChange={e => setContentId(e.target.value)}
 										className="form-control"
@@ -177,7 +233,7 @@ const JournalEntry = () => {
 								</td>
 								<td>
 									<input
-										type="text"
+										type="number"
 										value={inquireId}
 										onChange={e => setInquireId(e.target.value)}
 										className="form-control"
@@ -210,10 +266,10 @@ const JournalEntry = () => {
 							</tr>
 						</tbody>
 					</table>
-				</form>
-				<button type="submit" className="btn btn-primary btn-submit">
-					Submit
-				</button>
+					<button type="submit" className="btn btn-primary btn-submit" onClick={handleSubmit}>
+						Submit
+					</button>
+				</div>
 			</div>
 		</div>
 	);
