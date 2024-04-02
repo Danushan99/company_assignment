@@ -50,7 +50,7 @@ const JournalEntry = () => {
 				comments: comment,
 				office: 100,
 				invNo: '001',
-				invPdf: "PDF Path",
+				invPdf: 'PDF Path',
 				argNo: '002',
 				ccy: '003',
 				totalDbtAmount: 1000,
@@ -77,7 +77,47 @@ const JournalEntry = () => {
 				]
 			};
 
-			const res = axios.post(`${apiUrl}${journalSectionURL.addNewEntry}`, { body });
+			const newBody = {
+				datas: [
+					{
+						year: 1999,
+						entyDate: "entyDate",
+						ipdate: "ipdate",
+						dueDate: "dueDate",
+						comments: "comments",
+						office: 100,
+						comid: "Sri Lanka",
+						invNo: "invNo",
+						invPdf: "invPdf",
+						argNo: "argNo",
+						ccy: "ccy",
+						totalDbtAmount: 1000,
+						totalCdtAmount: 1000,
+						dbtAmounts: [
+							{
+								key: "01",
+								accountID: 10,
+								contactID: 20,
+								inqId: 50,
+								comment: "comment",
+								amount: 2000
+							}
+						],
+						cdtAmounts: [
+							{
+								key: "02",
+								accountID: 20,
+								contactID: 30,
+								inqId: 20,
+								comment: "comment",
+								amount: 400
+							}
+						]
+					}
+				]
+			};
+
+			const res = axios.post(`${apiUrl}${journalSectionURL.addNewEntry}`, newBody);
 
 			if (res?.status === 200) {
 				console.log('res : ', res);
@@ -87,7 +127,7 @@ const JournalEntry = () => {
 			}
 		} catch (error) {
 			toast.error(error?.message, {
-				position: toast.POSITION.TOP_CENTER,
+				position: toast.POSITION.TOP_CENTER
 				// autoClose: 400
 			});
 			return error.message;
